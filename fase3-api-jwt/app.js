@@ -53,7 +53,7 @@ app.get('/api/admin', verifyToken, (req, res) => {
   });
 });
 
-// 3. Endpoint sensible protegido 2: Reportes confidenciales (Cumple rúbrica)
+// 3. Endpoint sensible protegido 2: Reportes confidenciales 
 app.get('/api/reportes', verifyToken, (req, res) => {
   res.json({
     status: 'success',
