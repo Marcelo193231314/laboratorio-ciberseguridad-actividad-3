@@ -1,0 +1,17 @@
+# Secretos y credenciales (NUNCA SUBIR)
+.env
+.env.*
+*.key
+*.pem
+
+# Estados de Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# Dependencias y temporales
+node_modules/
+prueba.txt
+prueba-anon.txt
+*.log
