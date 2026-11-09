@@ -1,4 +1,4 @@
-const express = require('express');
+锘縞onst express = require('express');
 const jwt = require('jsonwebtoken');
 
 const app = express();
@@ -6,7 +6,7 @@ app.use(express.json());
 
 const JWT_SECRET = 'clave_secreta_laboratorio_2024';
 
-// 1. Endpoint p鷅lico: Generaci髇 de token JWT
+// 1. Endpoint p煤blico: Generaci贸n de token JWT
 app.post('/api/login', (req, res) => {
   const { username, password } = req.body;
 
@@ -16,13 +16,13 @@ app.post('/api/login', (req, res) => {
       JWT_SECRET,
       { expiresIn: '1h' }
     );
-    return res.json({ message: 'Autenticaci髇 exitosa', token });
+    return res.json({ message: 'Autenticaci贸n exitosa', token });
   }
 
-  return res.status(401).json({ error: 'Credenciales inv醠idas' });
+  return res.status(401).json({ error: 'Credenciales inv谩lidas' });
 });
 
-// Middleware de validaci髇 de token
+// Middleware de validaci贸n de token
 function verifyToken(req, res, next) {
   const authHeader = req.headers['authorization'];
   
@@ -32,28 +32,37 @@ function verifyToken(req, res, next) {
 
   const parts = authHeader.split(' ');
   if (parts.length !== 2 || parts[0] !== 'Bearer') {
-    return res.status(400).json({ error: 'Formato inv醠ido. Uso: Bearer <token>' });
+    return res.status(400).json({ error: 'Formato inv谩lido. Uso: Bearer <token>' });
   }
 
   jwt.verify(parts[1], JWT_SECRET, (err, decoded) => {
     if (err) {
-      return res.status(403).json({ error: 'Token inv醠ido o expirado' });
+      return res.status(403).json({ error: 'Token inv谩lido o expirado' });
     }
     req.user = decoded;
     next();
   });
 }
 
-// 2. Endpoint sensible protegido
+// 2. Endpoint sensible protegido 1: Administraci贸n
 app.get('/api/admin', verifyToken, (req, res) => {
   res.json({
     status: 'success',
-    mensaje: 'Acceso concedido a zona protegida de administraci髇',
+    mensaje: 'Acceso concedido a zona protegida de administraci贸n',
+    usuario: req.user
+  });
+});
+
+// 3. Endpoint sensible protegido 2: Reportes confidenciales (Cumple r煤brica)
+app.get('/api/reportes', verifyToken, (req, res) => {
+  res.json({
+    status: 'success',
+    mensaje: 'Acceso concedido a reportes sensibles de auditor铆a',
     usuario: req.user
   });
 });
 
 const PORT = 3000;
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`API en ejecuci髇 en http://localhost:${PORT}`);
+  console.log(`API en ejecuci贸n en http://localhost:${PORT}`);
 });
